@@ -37,5 +37,6 @@ move obj dt = setPosition obj newPos
     where
         currPos = getPosition obj
         currVel = getVelocity obj
-        newPos = Position (px currPos + vx currVel * dt) (py currPos + vy currVel * dt) -- respectively multiple both x and y of position with x and y factor of velocity
+        -- respectively add (velocity * passed time) to x and y of position
+        newPos = Position (px currPos + vx currVel * dt) (py currPos + vy currVel * dt) 
 
