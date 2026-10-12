@@ -4,12 +4,12 @@ module DataTypes.Types where
 -- DataTypes folder can be removed otherwise
 
 data Position = Position {
-    px :: Float, -- access using e.g. "x pos" where "pos :: Position" 
+    px :: Float, -- access using e.g. "px pos" where "pos :: Position" 
     py :: Float
 }
 
 data Velocity = Velocity {
-    vx :: Float, -- access using e.g. "x vel" where "vel :: Velocity" 
+    vx :: Float, -- access using e.g. "vx vel" where "vel :: Velocity" 
     vy :: Float
 }
 
@@ -21,15 +21,15 @@ data GameState = GameState { -- each element of GameState needs to exist
 }
 
 data Player = Player {
-    playerPosition :: Position,               -- is naming this playerPosition better?
+    playerPosition :: Position,
     -- speed :: Float                   -- likely redundant state
     -- movementDirection :: Position(?) -- likely redundant state
-    playerVelocity :: Velocity, 
-    playerFacingDirection :: Float            -- facing direction separate from velocity -- 'angle' might be a better name
+    playerVelocity :: Velocity,         -- velocity is a function of speed and movementDirection
+    playerFacingDirection :: Float      -- facing direction separate from velocity -- 'angle' might be a better name
 }
 
 data PlayingField = PlayingField {
-    asteroids :: [Asteroid], -- maybe make Asteroid Constructor for Enemy type?
+    asteroids :: [Asteroid],            -- maybe make Asteroid Constructor for Enemy type?
     enemies :: [Enemy],      
     bullets :: [Bullet]      
 }
