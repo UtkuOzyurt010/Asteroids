@@ -2,25 +2,25 @@ module View where
 
 import Graphics.Gloss
     ( Picture, Color, pictures, color, translate, rotate
-    , polygon, circle, circleSolid, white, red, yellow )
+    , polygon, circle, circleSolid, white, red, yellow, orange )
 
 import DataTypes.Types
 
--- Drawing constants (no magic numbers in the drawing code below)
+-- drawing constants (no magic numbers in the drawing code below)
 
--- | Pixels of radius per unit of 'asteroidSize' / 'enemySize' / 'bulletSize'.
+-- pixels of radius per unit of 'asteroidSize' / 'enemySize' / 'bulletSize'.
 sizeUnit :: Float
 sizeUnit = 8
 
--- | Outline of the player's ship, pointing up.
+-- outline of the player's ship, pointing up.
 shipShape :: [(Float, Float)]
 shipShape = [(0, 15), (-10, -10), (10, -10)]
 
--- | Entry point for Gloss: the rendering itself is pure, only the type is IO.
+-- entry point for Gloss: the rendering itself is pure, only the type is IO.
 view :: GameState -> IO Picture
 view = return . render
 
--- | Turn the whole game state into a picture.
+-- turn the whole game state into a picture.
 render :: GameState -> Picture
 render gs = pictures $
     drawPlayer (player gs)
@@ -30,11 +30,11 @@ render gs = pictures $
   where
     field = playingField gs
 
--- | Move a picture (drawn around the origin) to a game position.
+-- move a picture (drawn around the origin) to a game position.
 atPosition :: Position -> Picture -> Picture
 atPosition pos = translate (px pos) (py pos)
 
--- | Gloss rotates clockwise in degrees; 0 means pointing up.
+-- gloss rotates clockwise in degrees; 0 means pointing up.
 drawPlayer :: Player -> Picture
 drawPlayer p =
     atPosition (playerPosition p)
@@ -45,8 +45,12 @@ drawPlayer p =
 drawAsteroid :: Asteroid -> Picture
 drawAsteroid a =
     atPosition (asteroidPosition a)
-    . color white
+    . color (asteroidColor (asteroidKind a))
     $ circle (fromIntegral (asteroidSize a) * sizeUnit)
+
+asteroidColor :: AsteroidKind -> Color
+asteroidColor Regular       = white
+asteroidColor (Exploding _) = orange
 
 drawEnemy :: Enemy -> Picture
 drawEnemy e =
@@ -57,8 +61,9 @@ drawEnemy e =
 drawBullet :: Bullet -> Picture
 drawBullet b =
     atPosition (bulletPosition b)
-    . color bulletColor
+    . color (bulletColor (bulletOwner b))
     $ circleSolid (fromIntegral (bulletSize b) * sizeUnit)
-  where
-    bulletColor :: Color
-    bulletColor = yellow
+
+bulletColor :: Owner -> Color
+bulletColor FromPlayer = yellow
+bulletColor FromEnemy  = red

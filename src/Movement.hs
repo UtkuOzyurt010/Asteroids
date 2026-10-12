@@ -10,9 +10,9 @@ class Moveable a where
 
 instance Moveable Player where
     getPosition = playerPosition
-    setPosition player pos = player {playerPosition = pos}
+    setPosition p pos = p {playerPosition = pos}
     getVelocity = playerVelocity
-    setVelocity player vel = player {playerVelocity = vel}
+    setVelocity p vel = p {playerVelocity = vel}
 
 instance Moveable Asteroid where
     getPosition = asteroidPosition
