@@ -13,7 +13,8 @@ data SpawnMethod =
     |   Alternating
     |   Custom ([AsteroidKindCount] -> [Asteroid]) -- pass any function that takes the counts for each type and creates a list of asteroids
 
-makeAsteroidWave :: [AsteroidKindCount] -> SpawnMethod -> [Asteroid]
-makeAsteroidWave atcs (Custom customMethod) = customMethod atcs 
+
+makeAsteroidWave :: SpawnMethod -> [AsteroidKindCount] -> [Asteroid]
+makeAsteroidWave (Custom customMethod) = customMethod 
 -- makeAsteroidWave Random = 
 -- makeAstroidWave Alternating = 
