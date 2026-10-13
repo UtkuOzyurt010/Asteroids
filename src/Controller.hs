@@ -5,17 +5,19 @@ import Graphics.Gloss.Interface.IO.Game (Event)
 import DataTypes.Types
 import Movement
 
--- | Handle a keyboard/mouse event. Stub for now: ignores all input.
--- Next step: arrow keys to rotate/thrust, space to shoot, a key to pause.
+-- handle a keyboard/mouse event
+-- to do: keys to rotate/accelerate, shoot, pause
 input :: Event -> GameState -> IO GameState
 input _ gs = return gs
 
--- | Entry point for Gloss: the logic is pure, only the type is IO
+-- entry point for Gloss: the logic is pure, only the type is IO
 -- (IO is needed later for random numbers and high-score files).
 step :: Float -> GameState -> IO GameState
-step dt = return . update dt
+step dt gs = case status gs of
+    Playing -> return (update dt gs)
+    _       -> return gs  -- Paused or GameOver: the world is frozen
 
--- | Advance the game by @dt@ seconds: move everything that moves.
+-- advance the game by 'dt' seconds: move everything that moves.
 update :: Float -> GameState -> GameState
 update dt gs = gs
     { player = move (player gs) dt
