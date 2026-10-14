@@ -6,13 +6,6 @@ import System.Random (StdGen)
 -- DataTypes folder can be removed otherwise
 
 data Position = Position {
-    px :: Float, -- access using e.g. "x pos" where "pos :: Position" 
-    py :: Float
-} deriving (Show, Eq)
-
-data Velocity = Velocity {
-    vx :: Float, -- access using e.g. "x vel" where "vel :: Velocity" 
-    vy :: Floatdata Position = Position {
     px :: Float, -- access using e.g. "px pos" where "pos :: Position"
     py :: Float
 } deriving (Show, Eq)
@@ -54,7 +47,9 @@ data PlayingField = PlayingField {
     explosions :: [Explosion]  -- short-lived animations (animation requirement)
 } deriving (Show, Eq)
 
-data AsteroidType -- used in e.g. AsteroidWaves.hs for spawning based on type, the constructors for the Asteroid data types are not usable for this
+-- the kind of an asteroid; also used in e.g. AsteroidWaves.hs to say what to spawn.
+-- data that only one kind has is a constructor argument, so there are no partial field selectors.
+data AsteroidKind
     = Regular
     | Exploding Float -- explosion radius, from center, not from edge
     deriving (Show, Eq)
