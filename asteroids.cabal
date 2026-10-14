@@ -18,5 +18,6 @@ executable asteroids
                      , Movement
                      , AsteroidWaves
                      , DataTypes.Types
+                     , Config
   default-language:    Haskell2010
   ghc-options:         -Wall
