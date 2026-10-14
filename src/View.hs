@@ -6,15 +6,7 @@ import Graphics.Gloss
 
 import DataTypes.Types
 
--- drawing constants (no magic numbers in the drawing code below)
-
--- pixels of radius per unit of 'asteroidSize' / 'enemySize' / 'bulletSize'.
-sizeUnit :: Float
-sizeUnit = 8
-
--- outline of the player's ship, pointing up.
-shipShape :: [(Float, Float)]
-shipShape = [(0, 15), (-10, -10), (10, -10)]
+import Config (sizeUnit, shipShape)
 
 -- entry point for Gloss: the rendering itself is pure, only the type is IO.
 view :: GameState -> IO Picture

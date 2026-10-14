@@ -43,3 +43,13 @@ waveAsteroidSize = 4
 -- regular asteroids in wave n: baseAsteroidsPerWave + n
 baseAsteroidsPerWave :: Int
 baseAsteroidsPerWave = 2
+
+-- VIEW
+
+-- pixels of radius per unit of 'asteroidSize' / 'enemySize' / 'bulletSize'.
+sizeUnit :: Float
+sizeUnit = 8
+
+-- outline of the player's ship, pointing up.
+shipShape :: [(Float, Float)]
+shipShape = [(0, 15), (-10, -10), (10, -10)]
