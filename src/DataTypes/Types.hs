@@ -27,6 +27,7 @@ data GameState = GameState { -- each element of GameState needs to exist
     playingField :: PlayingField,
     score        :: Int,
     highScores   :: [Int],  -- loaded from / saved to a file (IO requirement)
+    wave         :: Int,    -- number of the current asteroid wave, 0 before the first one
     rng          :: StdGen  -- random generator, threaded through the pure game logic
 }
 
@@ -92,5 +93,6 @@ data Bullet = Bullet {
 -- an explosion animation: it grows/fades with its age and is removed after a fixed duration.
 data Explosion = Explosion {
     explosionPosition :: Position,
-    explosionAge :: Float -- seconds since it started
+    explosionAge :: Float, -- seconds since it started
+    explosionRadius :: Float -- final radius, copied from the asteroid's kind
 } deriving (Show, Eq)

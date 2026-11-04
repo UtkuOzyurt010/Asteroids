@@ -38,6 +38,31 @@ asteroidSpeedRange = (30, 90)
 waveAsteroidSize :: Int
 waveAsteroidSize = 4
 
+-- asteroids smaller than this are destroyed instead of split
+minAsteroidSize :: Int
+minAsteroidSize = 1
+
+-- number of pieces a hit asteroid splits into
+asteroidSplitCount :: Int
+asteroidSplitCount = 2
+
+-- explosion radius of exploding asteroids, chosen when they spawn
+explosionRadiusRange :: (Float, Float)
+explosionRadiusRange = (60, 120)
+
+-- ENEMIES
+
+enemySpeedRange :: (Float, Float)
+enemySpeedRange = (40, 80)
+
+-- size of newly spawned enemies
+enemySpawnSize :: Int
+enemySpawnSize = 3
+
+-- seconds until a new shooter fires its first shot
+shooterFirstShotRange :: (Float, Float)
+shooterFirstShotRange = (1, 3)
+
 -- WAVES
 
 -- regular asteroids in wave n: baseAsteroidsPerWave + n

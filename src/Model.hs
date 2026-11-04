@@ -24,6 +24,7 @@ initialState gen = GameState
         }
     , score = 0
     , highScores = []
+    , wave = 0
     , rng = gen
     }
 

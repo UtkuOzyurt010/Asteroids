@@ -40,3 +40,9 @@ move dt obj = setPosition newPos obj
         -- respectively add (velocity * passed time) to x and y of position
         newPos = Position (px currPos + vx currVel * dt) (py currPos + vy currVel * dt) 
 
+-- straight-line distance between two positions
+distance :: Position -> Position -> Float
+distance a b = sqrt (dx * dx + dy * dy)
+    where
+        dx = px a - px b
+        dy = py a - py b
