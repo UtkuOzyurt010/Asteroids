@@ -16,9 +16,11 @@ executable asteroids
                      , Model
                      , View
                      , Movement
+                     , Drawing
                      , AsteroidWaves
                      , DataTypes.Types
                      , Config
                      , Randomness
+                     , Assets
   default-language:    Haskell2010
   ghc-options:         -Wall
