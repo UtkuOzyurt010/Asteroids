@@ -20,11 +20,11 @@ step dt gs = case status gs of
 -- advance the game by 'dt' seconds: move everything that moves.
 update :: Float -> GameState -> GameState
 update dt gs = gs
-    { player = move (player gs) dt
+    { player = move dt (player gs)
     , playingField = field
-        { asteroids = map (`move` dt) (asteroids field)
-        , enemies   = map (`move` dt) (enemies field)
-        , bullets   = map (`move` dt) (bullets field)
+        { asteroids = map (move dt) (asteroids field)
+        , enemies   = map (move dt) (enemies field)
+        , bullets   = map (move dt) (bullets field)
         }
     }
   where

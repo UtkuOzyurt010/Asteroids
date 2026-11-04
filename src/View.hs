@@ -1,61 +1,60 @@
 module View where
 
-import Graphics.Gloss
-    ( Picture, Color, pictures, color, translate, rotate
-    , polygon, circle, circleSolid, white, red, yellow, orange )
-
 import DataTypes.Types
 
-import Config (sizeUnit, shipShape)
+import Graphics.Gloss (Picture, pictures)
+
+import Assets
+import Drawing
 
 -- entry point for Gloss: the rendering itself is pure, only the type is IO.
-view :: GameState -> IO Picture
-view = return . render
+view :: Assets -> GameState -> IO Picture
+view as = return . render as
 
 -- turn the whole game state into a picture.
-render :: GameState -> Picture
-render gs = pictures $
-    drawPlayer (player gs)
-    : map drawAsteroid (asteroids field)
-    ++ map drawEnemy (enemies field)
-    ++ map drawBullet (bullets field)
+render :: Assets -> GameState -> Picture
+render as gs = pictures $
+    (draw as) (player gs)
+    : map (draw as) (asteroids field)
+    ++ map (draw as) (enemies field)
+    ++ map (draw as) (bullets field)
   where
     field = playingField gs
 
--- move a picture (drawn around the origin) to a game position.
-atPosition :: Position -> Picture -> Picture
-atPosition pos = translate (px pos) (py pos)
+-- -- move a picture (drawn around the origin) to a game position.
+-- atPosition :: Position -> Picture -> Picture
+-- atPosition pos = translate (px pos) (py pos)
 
--- gloss rotates clockwise in degrees; 0 means pointing up.
-drawPlayer :: Player -> Picture
-drawPlayer p =
-    atPosition (playerPosition p)
-    . rotate (playerFacingDirection p)
-    . color white
-    $ polygon shipShape
+-- -- gloss rotates clockwise in degrees; 0 means pointing up.
+-- drawPlayer :: Assets -> Player -> Picture
+-- drawPlayer as p =
+--     atPosition (playerPosition p)
+--     . rotate (playerFacingDirection p)
+--     -- . color white
+--     $ playerImage as
 
-drawAsteroid :: Asteroid -> Picture
-drawAsteroid a =
-    atPosition (asteroidPosition a)
-    . color (asteroidColor (asteroidKind a))
-    $ circle (fromIntegral (asteroidSize a) * sizeUnit)
+-- drawAsteroid :: Assets -> Asteroid -> Picture
+-- drawAsteroid as a =
+--     atPosition (asteroidPosition a)
+--     -- . color (asteroidColor (asteroidKind a))
+--     $ asteroidImage as
 
-asteroidColor :: AsteroidKind -> Color
-asteroidColor Regular       = white
-asteroidColor (Exploding _) = orange
+-- asteroidColor :: AsteroidKind -> Color
+-- asteroidColor Regular       = white
+-- asteroidColor (Exploding _) = orange
 
-drawEnemy :: Enemy -> Picture
-drawEnemy e =
-    atPosition (enemyPosition e)
-    . color red
-    $ circleSolid (fromIntegral (enemySize e) * sizeUnit)
+-- drawEnemy :: Assets -> Enemy -> Picture
+-- drawEnemy as e =
+--     atPosition (enemyPosition e)
+--     -- . color red
+--     $ enemyImage as
 
-drawBullet :: Bullet -> Picture
-drawBullet b =
-    atPosition (bulletPosition b)
-    . color (bulletColor (bulletOwner b))
-    $ circleSolid (fromIntegral (bulletSize b) * sizeUnit)
+-- drawBullet :: Assets -> Bullet -> Picture
+-- drawBullet as b =
+--     atPosition (bulletPosition b)
+--     -- . color (bulletColor (bulletOwner b))
+--     $ bulletImage as
 
-bulletColor :: Owner -> Color
-bulletColor FromPlayer = yellow
-bulletColor FromEnemy  = red
+-- bulletColor :: Owner -> Color
+-- bulletColor FromPlayer = yellow
+-- bulletColor FromEnemy  = red
