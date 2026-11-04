@@ -7,16 +7,12 @@ class Moveable a where
     setPosition :: Position -> a -> a
     getVelocity :: a -> Velocity
     setVelocity :: Velocity -> a -> a
-    getAcceleration :: a -> Acceleration
-    setAcceleration :: Acceleration -> a -> a
 
 instance Moveable Player where
     getPosition = playerPosition
     setPosition pos p = p {playerPosition = pos}
     getVelocity = playerVelocity
     setVelocity vel p = p {playerVelocity = vel}
-    getAcceleration = playerAcceleration
-    setAcceleration acc p = p {playerAcceleration = acc}
 
 instance Moveable Asteroid where
     getPosition = asteroidPosition
@@ -53,12 +49,22 @@ drag dt obj = setVelocity newVel obj
 
         newVel = Velocity (applyDrag velx) (applyDrag vely)
 
-accelerate :: Moveable a => Float -> a -> a
-accelerate dt obj = setVelocity newVel obj
+-- the acceleration is an argument, so objects that compute it every frame (enemies) don't have to store it
+accelerate :: Moveable a => Float -> Acceleration -> a -> a
+accelerate dt acc obj = setVelocity newVel obj
     where
         currVel = getVelocity obj
-        currAcc = getAcceleration obj
-        newVel = Velocity (vx currVel + ax currAcc * dt) (vy currVel + ay currAcc * dt)
+        newVel = Velocity (vx currVel + ax acc * dt) (vy currVel + ay acc * dt)
+
+-- slows an object down to maxSpeed if it is faster, keeping its direction
+limitSpeed :: Moveable a => Float -> a -> a
+limitSpeed maxSpeed obj
+    | speed <= maxSpeed = obj
+    | otherwise         = setVelocity (Velocity (vx currVel * factor) (vy currVel * factor)) obj
+    where
+        currVel = getVelocity obj
+        speed = sqrt (vx currVel * vx currVel + vy currVel * vy currVel)
+        factor = maxSpeed / speed
 
 move :: Moveable a => Float -> a ->  a
 move dt obj = setPosition newPos obj

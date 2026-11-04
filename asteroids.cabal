@@ -22,6 +22,7 @@ executable asteroids
                      , Config
                      , Randomness
                      , Spawning
+                     , Enemies
                      , Assets
   default-language:    Haskell2010
   ghc-options:         -Wall

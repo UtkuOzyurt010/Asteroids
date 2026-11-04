@@ -4,6 +4,7 @@ import Graphics.Gloss.Interface.IO.Game (Event, Event(EventMotion, EventKey), Ke
 
 import AsteroidWaves (releaseIncoming, spawnWaveIfCleared)
 import DataTypes.Types
+import Enemies (updateEnemies)
 import Movement
 
 -- handle a keyboard/mouse event
@@ -40,7 +41,7 @@ handlePlayerMovement key keyState p =
         ('a', Up) -> p {playerAcceleration = Acceleration {ax = 0, ay = accy}}
         ('d', Up) -> p {playerAcceleration = Acceleration {ax = 0, ay = accy}}
         _ -> p
-        where 
+        where
             acc = playerAcceleration p
             accx = ax acc
             accy = ay acc
@@ -58,16 +59,18 @@ step dt gs = case status gs of
     Playing -> return (update dt gs)
     _       -> return gs  -- Paused or GameOver: the world is frozen
 
--- advance the game by 'dt' seconds: move everything that moves, then let asteroids
--- of the current wave enter and start the next wave if the field is cleared.
+-- advance the game by 'dt' seconds: steer the enemies, move everything that moves, then let
+-- asteroids of the current wave enter and start the next wave if the field is cleared.
 update :: Float -> GameState -> GameState
 update dt gs = spawnWaveIfCleared gs
-    { player = move dt (accelerate dt (drag dt (player gs)))
+    { player = move dt (accelerate dt (playerAcceleration p) (drag dt p))
     , playingField = releaseIncoming dt field
         { asteroids = map (move dt) (asteroids field)
-        , enemies   = map (move dt) (enemies field)
-        , bullets   = map (move dt) (bullets field)
+        , enemies   = map (move dt) steeredEnemies
+        , bullets   = map (move dt) (enemyBullets ++ bullets field)
         }
     }
   where
+    p     = player gs
     field = playingField gs
+    (steeredEnemies, enemyBullets) = updateEnemies dt (playerPosition p) (enemies field)

@@ -63,6 +63,31 @@ enemySpawnSize = 3
 shooterFirstShotRange :: (Float, Float)
 shooterFirstShotRange = (1, 3)
 
+-- chasers accelerate towards the player, up to a maximum speed
+chaserAcceleration, chaserMaxSpeed :: Float
+chaserAcceleration = 120
+chaserMaxSpeed     = 110
+
+-- shooters approach more slowly...
+shooterAcceleration, shooterMaxSpeed :: Float
+shooterAcceleration = 80
+shooterMaxSpeed     = 70
+
+-- ...and brake once they are this close to the player
+shooterRange :: Float
+shooterRange = 220
+
+-- seconds between two shots of a shooter
+shooterFireInterval :: Float
+shooterFireInterval = 2
+
+-- bullets fired by enemies
+enemyBulletSpeed :: Float
+enemyBulletSpeed = 200
+
+enemyBulletSize :: Int
+enemyBulletSize = 1
+
 -- WAVES
 
 -- regular asteroids in wave n: baseAsteroidsPerWave + n
