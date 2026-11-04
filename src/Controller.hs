@@ -16,9 +16,9 @@ input (EventMotion (x, y)) gs = do
         angle = atan2 dx dy * 180 / pi -- -180 to 180 degrees
     return gs { player = p { playerFacingDirection = angle } }
 
--- input (EventKey (Char 'p') Down _ _) gs = do -- pause
---     let p = player gs
---     return gs { player = handlePlayerMovement key keyState p}
+input (EventKey (Char 'p') Down _ _) gs = do -- pause
+    let gameStatus = status gs
+    return gs {status = togglePause gameStatus }
 
 input (EventKey (Char key) keyState _ _) gs = do -- move player
     let p = player gs
@@ -44,6 +44,11 @@ handlePlayerMovement key keyState p =
             accx = ax acc
             accy = ay acc
             accStrength = 150
+
+togglePause :: GameStatus -> GameStatus
+togglePause Playing = Paused
+togglePause Paused = Playing
+togglePause GameOver = GameOver
 
 -- entry point for Gloss: the logic is pure, only the type is IO
 -- (IO is needed later for random numbers and high-score files).
