@@ -50,6 +50,10 @@ asteroidSplitCount = 2
 explosionRadiusRange :: (Float, Float)
 explosionRadiusRange = (60, 120)
 
+-- seconds an explosion lasts, growing from radius 0 to its full radius while fading out
+explosionDuration :: Float
+explosionDuration = 0.6
+
 -- ENEMIES
 
 enemySpeedRange :: (Float, Float)
@@ -63,7 +67,7 @@ enemySpawnSize = 3
 shooterFirstShotRange :: (Float, Float)
 shooterFirstShotRange = (1, 3)
 
--- chasers accelerate towards the player, up to a maximum speed
+-- chasers accelerate towards the player, up to a maximum speed (px/s^2, px/s)
 chaserAcceleration, chaserMaxSpeed :: Float
 chaserAcceleration = 120
 chaserMaxSpeed     = 110

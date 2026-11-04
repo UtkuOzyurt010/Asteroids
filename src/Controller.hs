@@ -5,6 +5,7 @@ import Graphics.Gloss.Interface.IO.Game (Event, Event(EventMotion, EventKey), Ke
 import AsteroidWaves (releaseIncoming, spawnWaveIfCleared)
 import DataTypes.Types
 import Enemies (updateEnemies)
+import Explosions (updateExplosions)
 import Movement
 
 -- handle a keyboard/mouse event
@@ -68,6 +69,7 @@ update dt gs = spawnWaveIfCleared gs
         { asteroids = map (move dt) (asteroids field)
         , enemies   = map (move dt) steeredEnemies
         , bullets   = map (move dt) (enemyBullets ++ bullets field)
+        , explosions = updateExplosions dt (explosions field)
         }
     }
   where

@@ -12,12 +12,14 @@ view :: Assets -> GameState -> IO Picture
 view as = return . render as
 
 -- turn the whole game state into a picture.
+-- gloss draws in list order, so explosions go over the asteroids and the player is always on top.
 render :: Assets -> GameState -> Picture
 render as gs = pictures $
-    (draw as) (player gs)
-    : map (draw as) (asteroids field)
+    map (draw as) (asteroids field)
     ++ map (draw as) (enemies field)
     ++ map (draw as) (bullets field)
+    ++ map (draw as) (explosions field)
+    ++ [draw as (player gs)]
   where
     field = playingField gs
 
