@@ -32,6 +32,7 @@ initialPlayer :: Player
 initialPlayer = Player
     { playerPosition        = Position 0 0
     , playerVelocity        = Velocity 0 0
+    , playerAcceleration    = Acceleration 0 0
     , playerFacingDirection = 0   -- degrees, 0 = pointing up (see View.drawPlayer)
     , playerLives           = startingLives
     , playerFireCooldown    = 0
