@@ -19,5 +19,6 @@ executable asteroids
                      , AsteroidWaves
                      , DataTypes.Types
                      , Config
+                     , Randomness
   default-language:    Haskell2010
   ghc-options:         -Wall
