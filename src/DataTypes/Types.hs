@@ -15,6 +15,11 @@ data Velocity = Velocity {
     vy :: Float
 } deriving (Show, Eq)
 
+data Acceleration = Acceleration {
+    ax :: Float,
+    ay :: Float
+} deriving (Show, Eq)
+
 -- whether the game is running, paused or finished.
 -- replaces the old 'gameOver :: Bool'; 'step' only updates the world while 'Playing'.
 data GameStatus = Playing | Paused | GameOver
@@ -35,6 +40,7 @@ data Player = Player {
     -- speed and movement direction are not stored separately: they would be
     -- redundant state, since velocity is a function of both
     playerVelocity :: Velocity,
+    playerAcceleration :: Acceleration,
     playerFacingDirection :: Float, -- facing direction separate from velocity -- 'angle' might be a better name
     playerLives :: Int,
     playerFireCooldown :: Float     -- seconds until the player may shoot again
