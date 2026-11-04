@@ -69,4 +69,16 @@ shooterFirstShotRange = (1, 3)
 baseAsteroidsPerWave :: Int
 baseAsteroidsPerWave = 2
 
+-- seconds between the asteroids of a wave entering the field
+asteroidSpawnInterval :: Float
+asteroidSpawnInterval = 0.4
+
+-- one more exploding asteroid every this many waves
+wavesPerExplodingAsteroid :: Int
+wavesPerExplodingAsteroid = 2
+
+-- one more enemy every this many waves
+wavesPerEnemy :: Int
+wavesPerEnemy = 3
+
 -- VIEW

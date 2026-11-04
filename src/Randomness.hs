@@ -3,6 +3,7 @@ module Randomness
     ( Rand
     , randomInRange
     , mapRand
+    , replicateRand
     , shuffle
     ) where
 
@@ -22,6 +23,10 @@ mapRand f xs gen = (ys, gen')
   where
     (gen', ys) = mapAccumL step gen xs
     step g x = let (y, g') = f x g in (g', y) -- mapAccumL wants (state, result)
+
+-- runs a random computation n times, e.g. to spawn n enemies
+replicateRand :: Int -> Rand a -> Rand [a]
+replicateRand n r = mapRand (const r) (replicate n ())
 
 -- random order: give each element a random key and sort by it
 shuffle :: [a] -> Rand [a]

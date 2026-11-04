@@ -24,7 +24,7 @@ randomSpawnPosition :: Position -> Rand Position
 randomSpawnPosition playerPos gen = (fromMaybe furthest (find farEnough candidates), gen2)
   where
     (first, gen1) = randomEdgePosition gen
-    (rest, gen2)  = mapRand (const randomEdgePosition) (replicate (maxSpawnAttempts - 1) ()) gen1
+    (rest, gen2)  = replicateRand (maxSpawnAttempts - 1) randomEdgePosition gen1
     candidates    = first : rest
     farEnough pos = distance playerPos pos >= minSpawnDistance
     furthest      = maximumBy (comparing (distance playerPos)) (first :| rest)

@@ -49,6 +49,7 @@ data Player = Player {
 
 data PlayingField = PlayingField {
     asteroids  :: [Asteroid],
+    incomingAsteroids :: [(Float, Asteroid)], -- rest of the current wave, with seconds until each one appears
     enemies    :: [Enemy],
     bullets    :: [Bullet],
     explosions :: [Explosion]  -- short-lived animations (animation requirement)

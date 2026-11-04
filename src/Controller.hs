@@ -2,6 +2,7 @@ module Controller where
 
 import Graphics.Gloss.Interface.IO.Game (Event, Event(EventMotion, EventKey), KeyState(Down, Up), Key(Char))
 
+import AsteroidWaves (releaseIncoming, spawnWaveIfCleared)
 import DataTypes.Types
 import Movement
 
@@ -57,12 +58,12 @@ step dt gs = case status gs of
     Playing -> return (update dt gs)
     _       -> return gs  -- Paused or GameOver: the world is frozen
 
--- advance the game by 'dt' seconds: move everything that moves.
+-- advance the game by 'dt' seconds: move everything that moves, then let asteroids
+-- of the current wave enter and start the next wave if the field is cleared.
 update :: Float -> GameState -> GameState
-update dt gs = gs
-    {   
-        player = move dt (accelerate dt (drag dt (player gs)))
-    , playingField = field
+update dt gs = spawnWaveIfCleared gs
+    { player = move dt (accelerate dt (drag dt (player gs)))
+    , playingField = releaseIncoming dt field
         { asteroids = map (move dt) (asteroids field)
         , enemies   = map (move dt) (enemies field)
         , bullets   = map (move dt) (bullets field)

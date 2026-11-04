@@ -11,13 +11,14 @@ startingLives = 3
 
 -- The state the game starts in. The random generator is created in 'Main'
 -- (an IO action) and passed in, so this function stays pure.
--- For now this contains one demo asteroid so that we can see something move.
+-- The field starts empty, so the first update spawns wave 1.
 initialState :: StdGen -> GameState
 initialState gen = GameState
     { status = Playing
     , player = initialPlayer
     , playingField = PlayingField
-        { asteroids  = [demoAsteroid]
+        { asteroids  = []
+        , incomingAsteroids = []
         , enemies    = []
         , bullets    = []
         , explosions = []
@@ -36,13 +37,4 @@ initialPlayer = Player
     , playerFacingDirection = 0   -- degrees, 0 = pointing up (see View.drawPlayer)
     , playerLives           = startingLives
     , playerFireCooldown    = 0
-    }
-
--- Temporary asteroid, to be replaced by the wave spawner.
-demoAsteroid :: Asteroid
-demoAsteroid = Asteroid
-    { asteroidPosition = Position (-200) 100
-    , asteroidVelocity = Velocity 30 (-10)
-    , asteroidSize     = 4
-    , asteroidKind     = Regular
     }
