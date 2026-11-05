@@ -37,4 +37,81 @@ collides a b = distance (getCollisionPosition a) (getCollisionPosition b)
     < getCollisionRadius a + getCollisionRadius b
 
 
+checkCollisionsPlayerBullets :: GameState -> GameState
+checkCollisionsPlayerBullets gs = foldl' checkCollisionsPlayerBullet gs pbs --fold with gs as accumulator to remove bullets/enemies as soon as possible to prevent multiple collisions
+    where 
+        field = playingField gs 
+        bs = bullets field
+        pbs = filter ((== PlayerOwned) . bulletOwner) bs
+
+checkCollisionsPlayerBullet :: GameState -> Bullet -> GameState
+checkCollisionsPlayerBullet gs bullet = 
+    case find (collides bullet) es of -- find first enemy hit by bullet
+        Just enemy -> handlePlayerBulletHitEnemy bullet enemy gs
+        Nothing -> 
+            case find (collides bullet) as of -- then check first asteroid hit by bullet
+                Just asteroid -> handlePlayerBulletHitAsteroid bullet asteroid gs
+                Nothing -> gs
+    where 
+        field = playingField gs
+        es = enemeis field
+        as = asteroids field
+
+handlePlayerBulletHitEnemy :: Bullet -> Enemy -> GameState -> GameState
+handlePlayerBulletHitEnemy b e gs = gs { 
+    playingField = field {
+        bullets = filter (/= b) bs -- remove bullet
+        enemies = filter (/= e) es -- remove enemy
+        score = s + 1              -- increment score
+    }
+}
+    where
+        field = playingField gs
+        bs = bullets field
+        es = enemies field
+        s = score field
+
+handlePlayerBulletHitAsteroid :: Bullet -> Asteroid -> GameState -> GameState
+handlePlayerBulletHitAsteroid b a gs = gs {
+    playingField = field {
+        bullets = filter (/= b) bs -- remove bullet
+        asteroid = filter (/= a) as -- remove asteroid
+        score = s + 1              -- increment score
+    }
+}
+    where
+        field = playingField gs
+        bs = bullets field
+        as = asteroids field
+        s = score field
+
+checkCollisionsEnemyBullets :: GameState -> GameState
+checkCollisionsEnemyBullets gs = foldl' checkCollisionsEnemyBullet gs ebs --fold with gs as accumulator to remove bullets/enemies as soon as possible to prevent multiple collisions
+    where 
+        field = playingField gs 
+        bs = bullets field
+        ebs = filter ((== EnemyOwned) . bulletOwner) bs
+
+checkCollisionsEnemyBullet :: GameState -> Bullet -> GameState
+checkCollisionsEnemyBullet gs bullet
+    | collides bullet p = handleEnemyBulletHitPlayer bullet gs
+    | otherwise = gs
+    where
+        field = playingField gs
+        p = player field
+
+handleEnemyBulletHitPlayer :: Bullet -> GameState -> GameState -- only 1 player in gameState so no need to pass it as argument
+handleBulletHitPlayer b gs = gs {
+    playingField = field {
+        bullets = filter (/= b) bs -- remove bullet
+        player = p {playerLives = pLives - 1} -- decrement playLives by 1, gameOver is checked in a alter step
+    }
+}
+    where
+        field = playingField gs
+        bs = bullets field
+        p = player field
+        pLives = playerLives p
+
+
     

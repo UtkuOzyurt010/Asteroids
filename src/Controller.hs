@@ -10,6 +10,7 @@ import Enemies (updateEnemies)
 import Explosions (updateExplosions)
 import Movement
 import Highscores
+import Colliding
 
 -- handle a keyboard/mouse event
 -- to do: keys to rotate/accelerate, shoot, pause
@@ -91,15 +92,20 @@ moveEntities dt gs = gs
     field = playingField gs
     (steeredEnemies, enemyBullets) = updateEnemies dt (playerPosition p) (enemies field)
 
--- 1. checks collisions
--- 2. updates adversary states
--- 3. updates score
--- 4. updates playerLives
+-- checks collisions
+-- updates adversary states
+-- updates score
+-- updates playerLives
 checkCollisions :: GameState -> GameState 
-checkCollisions gs = gs
+checkCollisions = 
+    checkCollisionsExplosions      
+    . checkCollisionsAsteroids     
+    . checkCollisionsEnemies       
+    . checkCollisionsEnemyBullets  -- 2nd
+    . checkCollisionsPlayerBullets -- 1st
 
--- 1. checks playerLives
--- 2. if 0, updates gs status to GameOver and updates highscores
+-- checks playerLives
+-- if 0, updates gs status to GameOver and updates highscores
 checkGameOver :: GameState -> GameState
 checkGameOver gs 
     | pLives <= 0 = gs 
