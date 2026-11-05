@@ -1,13 +1,15 @@
 module Controller where
 
 import Graphics.Gloss.Interface.IO.Game (Event, Event(EventMotion, EventKey), KeyState(Down, Up), Key(Char))
+import Control.Monad (when)
 
-import Config (accStrength)
+import Config (accStrength, highScoreFile)
 import AsteroidWaves (releaseIncoming, spawnWaveIfCleared)
 import DataTypes.Types
 import Enemies (updateEnemies)
 import Explosions (updateExplosions)
 import Movement
+import Highscores
 
 -- handle a keyboard/mouse event
 -- to do: keys to rotate/accelerate, shoot, pause
@@ -57,13 +59,25 @@ togglePause GameOver = GameOver
 -- (IO is needed later for random numbers and high-score files).
 step :: Float -> GameState -> IO GameState
 step dt gs = case status gs of
-    Playing -> return (update dt gs)
-    _       -> return gs  -- Paused or GameOver: the world is frozen
+    Playing -> do
+        let gs' = update dt gs
+        when (status gs' == GameOver) $
+            saveHighScores highScoreFile (highScores gs')
+        return gs'
+    _ -> return gs -- Paused or GameOver: the world is frozen
 
 -- advance the game by 'dt' seconds: steer the enemies, move everything that moves, then let
 -- asteroids of the current wave enter and start the next wave if the field is cleared.
 update :: Float -> GameState -> GameState
-update dt gs = spawnWaveIfCleared gs
+update dt gs = 
+    checkGameOver
+    $ checkCollisions
+    $ spawnWaveIfCleared 
+    $ moveEntities dt gs
+    
+
+moveEntities :: Float -> GameState -> GameState
+moveEntities dt gs = gs
     { player = move dt (accelerate dt (playerAcceleration p) (drag dt p))
     , playingField = releaseIncoming dt field
         { asteroids = map (move dt) (asteroids field)
@@ -76,3 +90,26 @@ update dt gs = spawnWaveIfCleared gs
     p     = player gs
     field = playingField gs
     (steeredEnemies, enemyBullets) = updateEnemies dt (playerPosition p) (enemies field)
+
+-- 1. checks collisions
+-- 2. updates adversary states
+-- 3. updates score
+-- 4. updates playerLives
+checkCollisions :: GameState -> GameState 
+checkCollisions gs = gs
+
+-- 1. checks playerLives
+-- 2. if 0, updates gs status to GameOver and updates highscores
+checkGameOver :: GameState -> GameState
+checkGameOver gs 
+    | pLives <= 0 = gs 
+        {
+            status = GameOver,
+            highScores = insertScore s hs
+        }
+    | otherwise = gs
+  where
+    p = player gs
+    pLives = playerLives p
+    s = score gs
+    hs = highScores gs

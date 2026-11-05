@@ -12,8 +12,8 @@ startingLives = 3
 -- The state the game starts in. The random generator is created in 'Main'
 -- (an IO action) and passed in, so this function stays pure.
 -- The field starts empty, so the first update spawns wave 1.
-initialState :: StdGen -> GameState
-initialState gen = GameState
+initialState :: StdGen -> [Int] -> GameState
+initialState gen scores = GameState
     { status = Playing
     , player = initialPlayer
     , playingField = PlayingField
@@ -24,7 +24,7 @@ initialState gen = GameState
         , explosions = []
         }
     , score = 0
-    , highScores = []
+    , highScores = scores
     , wave = 0
     , rng = gen
     }
