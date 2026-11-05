@@ -11,6 +11,18 @@ halfWidth, halfHeight :: Float
 halfWidth  = fromIntegral screenWidth  / 2
 halfHeight = fromIntegral screenHeight / 2
 
+-- IO / Highscores
+highScoreFile :: FilePath
+highScoreFile = "highscores.txt"
+maxHighScores :: Int
+maxHighScores = 10
+
+-- PLAYER
+dragStrength :: Float
+dragStrength = 60
+accStrength :: Float
+accStrength = 150
+
 -- SPAWNING
 
 -- how far outside the visible screen new objects appear

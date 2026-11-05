@@ -2,6 +2,8 @@ module Movement where
 
 import DataTypes.Types
 
+import Config (dragStrength)
+
 class Moveable a where
     getPosition :: a -> Position
     setPosition :: Position -> a -> a
@@ -32,15 +34,12 @@ instance Moveable Bullet where
     getVelocity = bulletVelocity
     setVelocity vel bullet = bullet {bulletVelocity = vel}
 
-
-
 drag :: Moveable a => Float -> a -> a
 drag dt obj = setVelocity newVel obj
     where
         currVel = getVelocity obj
         velx = vx currVel
         vely = vy currVel
-        dragStrength = 60
         applyDrag v
             | v > 0 = max 0 (v - dragStrength * dt)
             | v < 0 = min 0 (v + dragStrength * dt)

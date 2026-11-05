@@ -2,6 +2,7 @@ module Controller where
 
 import Graphics.Gloss.Interface.IO.Game (Event, Event(EventMotion, EventKey), KeyState(Down, Up), Key(Char))
 
+import Config (accStrength)
 import AsteroidWaves (releaseIncoming, spawnWaveIfCleared)
 import DataTypes.Types
 import Enemies (updateEnemies)
@@ -46,7 +47,6 @@ handlePlayerMovement key keyState p =
             acc = playerAcceleration p
             accx = ax acc
             accy = ay acc
-            accStrength = 150
 
 togglePause :: GameStatus -> GameStatus
 togglePause Playing = Paused
