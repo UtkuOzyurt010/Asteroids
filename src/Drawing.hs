@@ -1,7 +1,8 @@
 module Drawing where
 
-import Graphics.Gloss (translate, rotate, Picture, color, circleSolid, withAlpha, orange)
+import Graphics.Gloss (translate, rotate, scale, Picture, color, circleSolid, withAlpha, orange)
 
+import Config (waveAsteroidSize)
 import DataTypes.Types
 import Assets
 import Explosions (explosionProgress, currentRadius)
@@ -23,7 +24,9 @@ instance Drawable Player where
 instance Drawable Asteroid where
     draw as a =
         atPosition (asteroidPosition a)
-        $ asteroidImage as
+        $ scale aScale aScale (asteroidImage as)
+        where aScale = (fromIntegral (asteroidSize a)) / (fromIntegral waveAsteroidSize) -- asteroidsize / max size defined in Config
+            -- scale also calculated and used in Colliding.hs - refactor?
 
 instance Drawable Enemy where
     draw as e =
