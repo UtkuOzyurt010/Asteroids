@@ -4,7 +4,7 @@ import DataTypes.Types
 import Data.Ord (clamp)
 
 import Config (dragStrength, halfWidth, halfHeight, spawnMargin)
-import Assets (AssetsRadii playerRadius)
+import Assets (AssetsRadii, playerRadius)
 
 
 class Moveable a where
