@@ -24,14 +24,18 @@ instance Drawable Player where
 instance Drawable Asteroid where
     draw as a =
         atPosition (asteroidPosition a)
-        $ scale aScale aScale (asteroidImage as)
+        $ scale aScale aScale (image (asteroidKind a))
         where aScale = (fromIntegral (asteroidSize a)) / (fromIntegral waveAsteroidSize) -- asteroidsize / max size defined in Config
             -- scale also calculated and used in Colliding.hs - refactor?
+              image Regular       = asteroidImage as
+              image (Exploding _) = explodingAsteroidImage as
 
 instance Drawable Enemy where
     draw as e =
         atPosition (enemyPosition e)
-        $ enemyImage as
+        $ image (enemyBehaviour e)
+        where image Chaser      = enemyImage as
+              image (Shooter _) = shooterImage as
 
 instance Drawable Bullet where
     draw as b =

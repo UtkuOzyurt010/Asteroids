@@ -141,3 +141,7 @@ hudLineSpacing = 25
 -- colour of the HUD text
 hudColor :: Color
 hudColor = white
+
+-- the asteroid bitmaps are 160 px wide so this scales a full-size asteroid down to 32 px
+asteroidImageScale :: Float
+asteroidImageScale = 0.2
