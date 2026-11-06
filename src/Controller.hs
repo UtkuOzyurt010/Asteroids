@@ -29,16 +29,10 @@ input (EventKey (Char 'p') Down _ _) gs = do -- pause
     let gameStatus = status gs
     return gs {status = togglePause gameStatus }
 
-input (EventKey (SpecialKey KeySpace) Down _ _) gs = do -- shoot bullet
-    let 
-        p = player gs
-        field = playingField gs
-        bs = bullets field 
-    return gs {
-        playingField = field {
-            bullets = spawnPlayerbullet (playerPosition p) (playerFacingDirection p) : bs
-        }
-    }
+input (EventKey (SpecialKey KeySpace) Down _ _) gs = do -- shoot bullet (spacebar)
+    return (shootPlayerBullet gs)
+input (EventKey (MouseButton LeftButton) Down _ _) gs = do -- shoot bullet (left mouse click)
+    return (shootPlayerBullet gs)
 
 input (EventKey (Char key) keyState _ _) gs = do -- move player
     let p = player gs
@@ -46,7 +40,16 @@ input (EventKey (Char key) keyState _ _) gs = do -- move player
 
 input _ gs = return gs
 
-
+shootPlayerBullet :: GameState -> GameState
+shootPlayerBullet gs = gs {
+    playingField = field {
+        bullets = spawnPlayerbullet (playerPosition p) (playerFacingDirection p) : bs
+    }
+}
+    where
+        p = player gs
+        field = playingField gs
+        bs = bullets field 
 
 handlePlayerMovement :: Char -> KeyState -> Player -> Player
 handlePlayerMovement key keyState p =
