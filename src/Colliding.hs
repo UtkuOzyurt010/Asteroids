@@ -1,6 +1,5 @@
 module Colliding where
 
-import Graphics.Gloss (Picture)
 import Data.List (find)
 
 import Config (waveAsteroidSize)
@@ -36,7 +35,7 @@ instance Collideable Bullet where
 
 instance Collideable Explosion where
     getCollisionPosition e = explosionPosition e
-    getCollisionRadius assetsRadii e = currentRadius e -- currentRadius from Explosions.hs
+    getCollisionRadius _ e = currentRadius e -- currentRadius from Explosions.hs
     
 
 collides :: (Collideable a, Collideable b) => AssetsRadii -> a -> b -> Bool

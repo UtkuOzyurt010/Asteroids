@@ -1,4 +1,3 @@
--- gameplay constants so the game logic has no magic numbers
 module Config where
 
 import Graphics.Gloss (Color, white)

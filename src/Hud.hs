@@ -1,4 +1,3 @@
--- heads-up display: score, lives and wave, plus a line while paused or after game over
 module Hud (drawHud) where
 
 import Graphics.Gloss (Picture, pictures, translate, scale, color, text)

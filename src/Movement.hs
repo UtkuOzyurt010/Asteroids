@@ -91,20 +91,32 @@ clampPlayer assetsRadii p = p {
         velx' = if x' /= x then 0 else velx
         vely' = if y' /= y then 0 else vely
 
--- an object that leaves spawnMargin outside the screen comes back on the other side
-wrapAround :: Moveable a => a -> a
-wrapAround obj = setPosition (Position (wrapAxis w (px pos)) (wrapAxis h (py pos))) obj
+-- an object that is radius outside the screen and moving away comes back on the other side
+wrapAround :: Moveable a => Float -> a -> a
+wrapAround radius obj = setPosition (Position x y) obj
     where
         pos = getPosition obj
-        w = halfWidth  + spawnMargin
-        h = halfHeight + spawnMargin
+        vel = getVelocity obj
+        x = wrapAxis (halfWidth  + radius) (vx vel) (px pos)
+        y = wrapAxis (halfHeight + radius) (vy vel) (py pos)
 
--- keeps a coordinate between -edge and edge so new spawns exactly on the edge stay 
-wrapAxis :: Float -> Float -> Float
-wrapAxis edge c
-    | c > edge    = c - 2 * edge
-    | c < -edge   = c + 2 * edge
-    | otherwise   = c
+-- false once an object has left the rectangle spawnMargin outside the screen (for removing bullets)
+insideSpawnRectangle :: Moveable a => a -> Bool
+insideSpawnRectangle obj = abs (px pos) <= w && abs (py pos) <= h
+    where
+        pos = getPosition obj
+        (w, h) = spawnRectangle
+
+-- half width and half height of the rectangle objects spawn on and bullets disappear at
+spawnRectangle :: (Float, Float)
+spawnRectangle = (halfWidth + spawnMargin, halfHeight + spawnMargin)
+
+-- moves a coordinate past edge to the other side (only when moving away)
+wrapAxis :: Float -> Float -> Float -> Float
+wrapAxis edge v c
+    | c > edge  && v > 0 = c - 2 * edge
+    | c < -edge && v < 0 = c + 2 * edge
+    | otherwise          = c
 
 -- direction from one position to another in degrees, 0 = up and clockwise
 angleTowards :: Position -> Position -> Float

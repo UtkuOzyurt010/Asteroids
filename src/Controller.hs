@@ -95,9 +95,9 @@ moveEntities :: AssetsRadii -> Float -> GameState -> GameState
 moveEntities assetsRadii dt gs = gs
     { player = clampPlayer assetsRadii $ move dt $ accelerate dt (playerAcceleration p) (drag dt p)
     , playingField = releaseIncoming dt field
-        { asteroids = map (wrapAround . move dt) (asteroids field)
+        { asteroids = map (wrapAsteroid assetsRadii . move dt) (asteroids field)
         , enemies   = map (move dt) steeredEnemies
-        , bullets   = map (move dt) (enemyBullets ++ bullets field)
+        , bullets   = filter insideSpawnRectangle (map (move dt) (enemyBullets ++ bullets field))
         , explosions = updateExplosions dt (explosions field)
         }
     }
@@ -105,6 +105,10 @@ moveEntities assetsRadii dt gs = gs
     p     = player gs
     field = playingField gs
     (steeredEnemies, enemyBullets) = updateEnemies dt (playerPosition p) (enemies field)
+
+-- wraps an asteroid as soon as it is fully out of view
+wrapAsteroid :: AssetsRadii -> Asteroid -> Asteroid
+wrapAsteroid assetsRadii a = wrapAround (getCollisionRadius assetsRadii a) a
 
 -- checks collisions
 -- updates adversary states

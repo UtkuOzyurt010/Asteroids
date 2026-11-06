@@ -1,4 +1,3 @@
--- pure randomness: the generator from 'rng' in GameState is threaded through the game logic
 module Randomness
     ( Rand
     , randomInRange

@@ -1,4 +1,3 @@
--- Initial state of the game. The data types themselves live in DataTypes.Types.
 module Model where
 
 import System.Random (StdGen)

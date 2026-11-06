@@ -1,4 +1,3 @@
--- asteroid waves: what a wave contains, in which order the kinds spawn, and when the next wave starts
 module AsteroidWaves
     ( AsteroidKindCount (..)
     , SpawnMethod (..)

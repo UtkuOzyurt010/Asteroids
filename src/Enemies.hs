@@ -1,4 +1,3 @@
--- enemy "intelligence": chasers fly into the player, shooters keep their distance and shoot
 module Enemies
     ( updateEnemies
     ) where

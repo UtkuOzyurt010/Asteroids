@@ -1,4 +1,3 @@
--- explosions of exploding asteroids: created on a hit, grow and fade over explosionDuration
 module Explosions
     ( explosionFor
     , updateExplosions
