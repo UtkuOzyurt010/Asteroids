@@ -11,8 +11,10 @@ data Assets = Assets {
     explodingAsteroidImage :: Picture, -- same size as asteroidImage, so it shares asteroidRadius
     enemyImage :: Picture,             -- chasers
     shooterImage :: Picture,           -- same size as enemyImage, so it shares enemyRadius
-    bulletImage :: Picture,
+    bulletImage :: Picture
+}
 
+data AssetsRadii = AssetsRadii {
     playerRadius :: Float,
     asteroidRadius :: Float,
     enemyRadius :: Float,
@@ -46,10 +48,14 @@ loadAssets = do
         , enemyImage = enemyBmp
         , shooterImage = shooterBmp
         , bulletImage = bulletBmp
-        , playerRadius = getRadiusfromPicture playerBmp
-        , asteroidRadius = getRadiusfromPicture scaledAsteroidBmp
-        , enemyRadius = getRadiusfromPicture enemyBmp
-        , bulletRadius = getRadiusfromPicture bulletBmp
         }
+
+loadAssetsRadii :: Assets -> IO AssetsRadii
+loadAssetsRadii assets = return AssetsRadii {
+        playerRadius = getRadiusfromPicture (playerImage assets)
+        , asteroidRadius = getRadiusfromPicture (asteroidImage assets)
+        , enemyRadius = getRadiusfromPicture (enemyImage assets)
+        , bulletRadius = getRadiusfromPicture (bulletImage assets)
+    }
 
 

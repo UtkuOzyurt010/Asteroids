@@ -23,6 +23,7 @@ executable asteroids
                      , Config
                      , Randomness
                      , Spawning
+                     , Colliding
                      , Enemies
                      , Explosions
                      , Assets

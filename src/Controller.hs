@@ -11,6 +11,7 @@ import Explosions (updateExplosions)
 import Movement
 import Highscores
 import Colliding
+import Assets (AssetsRadii)
 
 -- handle a keyboard/mouse event
 -- to do: keys to rotate/accelerate, shoot, pause
@@ -58,10 +59,10 @@ togglePause GameOver = GameOver
 
 -- entry point for Gloss: the logic is pure, only the type is IO
 -- (IO is needed later for random numbers and high-score files).
-step :: Float -> GameState -> IO GameState
-step dt gs = case status gs of
+step :: AssetsRadii -> Float -> GameState -> IO GameState
+step assetsRadii dt gs = case status gs of
     Playing -> do
-        let gs' = update dt gs
+        let gs' = update assetsRadii dt gs
         when (status gs' == GameOver) $
             saveHighScores highScoreFile (highScores gs')
         return gs'
@@ -69,10 +70,10 @@ step dt gs = case status gs of
 
 -- advance the game by 'dt' seconds: steer the enemies, move everything that moves, then let
 -- asteroids of the current wave enter and start the next wave if the field is cleared.
-update :: Float -> GameState -> GameState
-update dt gs = 
+update :: AssetsRadii -> Float -> GameState -> GameState
+update assetsRadii dt gs = 
     checkGameOver
-    $ checkCollisions
+    $ checkCollisions assetsRadii
     $ spawnWaveIfCleared 
     $ moveEntities dt gs
     
@@ -96,13 +97,13 @@ moveEntities dt gs = gs
 -- updates adversary states
 -- updates score
 -- updates playerLives
-checkCollisions :: GameState -> GameState 
-checkCollisions = 
-    checkCollisionsExplosions      
-    . checkCollisionsAsteroids     
-    . checkCollisionsEnemies       
-    . checkCollisionsEnemyBullets  -- 2nd
-    . checkCollisionsPlayerBullets -- 1st
+checkCollisions :: AssetsRadii -> GameState -> GameState 
+checkCollisions assetsRadii = 
+    -- checkCollisionsExplosions assetsRadii     
+    -- . checkCollisionsAsteroids assetsRadii    
+    -- . checkCollisionsEnemies assetsRadii      
+    checkCollisionsEnemyBullets assetsRadii  -- 2nd
+    . checkCollisionsPlayerBullets assetsRadii -- 1st
 
 -- checks playerLives
 -- if 0, updates gs status to GameOver and updates highscores
