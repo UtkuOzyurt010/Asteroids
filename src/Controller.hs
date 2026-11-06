@@ -1,6 +1,6 @@
 module Controller where
 
-import Graphics.Gloss.Interface.IO.Game (Event, Event(EventMotion, EventKey), KeyState(Down, Up), Key(Char))
+import Graphics.Gloss.Interface.IO.Game
 import Control.Monad (when)
 
 import Config (accStrength, highScoreFile)
@@ -12,6 +12,7 @@ import Movement
 import Highscores
 import Colliding
 import Assets (AssetsRadii)
+import Spawning (spawnPlayerbullet)
 
 -- handle a keyboard/mouse event
 -- to do: keys to rotate/accelerate, shoot, pause
@@ -28,11 +29,23 @@ input (EventKey (Char 'p') Down _ _) gs = do -- pause
     let gameStatus = status gs
     return gs {status = togglePause gameStatus }
 
+input (EventKey (SpecialKey KeySpace) Down _ _) gs = do -- shoot bullet
+    let 
+        p = player gs
+        field = playingField gs
+        bs = bullets field 
+    return gs {
+        playingField = field {
+            bullets = spawnPlayerbullet (playerPosition p) (playerFacingDirection p) : bs
+        }
+    }
+
 input (EventKey (Char key) keyState _ _) gs = do -- move player
     let p = player gs
     return gs { player = handlePlayerMovement key keyState p}
 
 input _ gs = return gs
+
 
 
 handlePlayerMovement :: Char -> KeyState -> Player -> Player

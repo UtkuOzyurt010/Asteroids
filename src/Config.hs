@@ -30,6 +30,13 @@ dragStrength = 60
 accStrength :: Float
 accStrength = 150
 
+-- bullets fired by player
+playerBulletSpeed :: Float
+playerBulletSpeed = 200
+
+playerBulletSize :: Int
+playerBulletSize = 1
+
 -- SPAWNING
 
 -- how far outside the visible screen new objects appear

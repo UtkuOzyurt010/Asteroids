@@ -5,6 +5,7 @@ module Spawning
     , spawnAsteroid
     , splitAsteroid
     , spawnEnemy
+    , spawnPlayerbullet
     ) where
 
 import Data.Foldable (maximumBy)
@@ -111,3 +112,21 @@ spawnEnemy playerPos gen = (enemy, gen4)
         , enemyFacingDirection = angleTowards pos playerPos
         , enemySize      = enemySpawnSize
         }
+
+-- Player position -> player facingDirection / angle
+spawnPlayerbullet :: Position -> Float -> Bullet
+spawnPlayerbullet pos angle = 
+  let 
+    (dirx, diry) = angleToVector angle
+  in Bullet {
+    bulletPosition = pos
+    , bulletVelocity = Velocity (playerBulletSpeed * dirx) (playerBulletSpeed * diry)
+    , bulletSize = playerBulletSize
+    , bulletOwner = FromPlayer
+  }
+
+-- 0 facing up, clockwise rotation
+angleToVector :: Float -> (Float, Float)
+angleToVector angle = (sin rad, cos rad)
+  where 
+    rad = angle * pi / 180
