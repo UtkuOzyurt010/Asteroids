@@ -88,12 +88,12 @@ update assetsRadii dt gs =
     checkGameOver
     $ checkCollisions assetsRadii
     $ spawnWaveIfCleared 
-    $ moveEntities dt gs
+    $ moveEntities assetsRadii dt gs
     
 
-moveEntities :: Float -> GameState -> GameState
-moveEntities dt gs = gs
-    { player = move dt (accelerate dt (playerAcceleration p) (drag dt p))
+moveEntities :: AssetsRadii -> Float -> GameState -> GameState
+moveEntities assetsRadii dt gs = gs
+    { player = clampPlayer assetsRadii $ move dt $ accelerate dt (playerAcceleration p) (drag dt p)
     , playingField = releaseIncoming dt field
         { asteroids = map (move dt) (asteroids field)
         , enemies   = map (move dt) steeredEnemies

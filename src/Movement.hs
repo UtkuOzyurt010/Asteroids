@@ -1,8 +1,11 @@
 module Movement where
 
 import DataTypes.Types
+import Data.Ord (clamp)
 
-import Config (dragStrength)
+-- import Colliding (getCollisionRadius)
+import Config (dragStrength, halfWidth, halfHeight)
+import Assets (AssetsRadii)
 
 class Moveable a where
     getPosition :: a -> Position
@@ -72,6 +75,16 @@ move dt obj = setPosition newPos obj
         currVel = getVelocity obj
         -- respectively add (velocity * passed time) to x and y of position
         newPos = Position (px currPos + vx currVel * dt) (py currPos + vy currVel * dt) 
+
+clampPlayer :: AssetsRadii -> Player -> Player
+clampPlayer assetsRadii p = p {
+    playerPosition = Position x' y'
+}
+    where 
+        Position x y = playerPosition p
+        -- r = getCollisionRadius assetsRadii p
+        x' = clamp (-halfWidth, halfWidth) x
+        y' = clamp (-halfHeight, halfHeight) y
 
 -- direction from one position to another in degrees, 0 = up and clockwise
 angleTowards :: Position -> Position -> Float
