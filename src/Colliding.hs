@@ -8,6 +8,7 @@ import Config (waveAsteroidSize)
 import Movement (distance)
 import DataTypes.Types
 import Assets
+import Spawning (splitAsteroid)
 
 class Collideable a where
     getCollisionPosition :: a -> Position
@@ -75,15 +76,19 @@ handlePlayerBulletHitAsteroid :: Bullet -> Asteroid -> GameState -> GameState
 handlePlayerBulletHitAsteroid b a gs = gs {
     playingField = field {
         bullets = filter (/= b) bs -- remove bullet
-        , asteroids = filter (/= a) as -- remove asteroid
+        , asteroids = filter (/= a) as ++ newAsteroids-- remove asteroid
     }
     , score = s + 1              -- increment score
+    , rng = gen'
 }
     where
         field = playingField gs
         bs = bullets field
         as = asteroids field
         s = score gs
+        gen = rng gs
+        
+        (newAsteroids, gen') = splitAsteroid a gen
 
 checkCollisionsEnemyBullets :: AssetsRadii -> GameState -> GameState
 checkCollisionsEnemyBullets assetsRadii gs = foldl' (checkCollisionsEnemyBullet assetsRadii) gs ebs --fold with gs as accumulator to remove bullets/enemies as soon as possible to prevent multiple collisions
