@@ -92,7 +92,6 @@ data Bullet = Bullet {
     bulletVelocity :: Velocity,
     bulletSize :: Int,
     bulletOwner :: Owner
-    -- damagePoints :: Int
 } deriving (Show, Eq)
 
 -- an explosion animation: it grows/fades with its age and is removed after a fixed duration.

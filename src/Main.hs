@@ -16,10 +16,9 @@ main = do
     assets <- loadAssets
     assetsRadii <- loadAssetsRadii assets
     playIO (InWindow "Asteroids" (screenWidth, screenHeight) (0, 0)) -- Or FullScreen
-           black            -- Background color
-           60               -- Frames per second
-           --(initialState gen scores assets) -- Initial state
-           (initialState gen scores) -- Initial state
-           (view assets)            -- View function
-           input            -- Event function
-           (step assetsRadii)            -- Step function
+           black                        -- Background color
+           60                           -- Frames per second
+           (initialState gen scores)    -- Initial state
+           (view assets)                -- View function
+           input                        -- Event function
+           (step assetsRadii)           -- Step function

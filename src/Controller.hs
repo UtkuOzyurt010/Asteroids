@@ -15,7 +15,6 @@ import Assets (AssetsRadii)
 import Spawning (spawnPlayerbullet)
 
 -- handle a keyboard/mouse event
--- to do: keys to rotate/accelerate, shoot, pause
 input :: Event -> GameState -> IO GameState
 input (EventMotion (x, y)) gs = do
     let p = player gs
@@ -70,8 +69,7 @@ togglePause Playing = Paused
 togglePause Paused = Playing
 togglePause GameOver = GameOver
 
--- entry point for Gloss: the logic is pure, only the type is IO
--- (IO is needed later for random numbers and high-score files).
+-- entry point for Gloss: the logic is pure, IO is only used to save the high scores at game over
 step :: AssetsRadii -> Float -> GameState -> IO GameState
 step assetsRadii dt gs = case status gs of
     Playing -> do

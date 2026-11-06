@@ -2,8 +2,6 @@ module Colliding where
 
 import Data.List (find)
 
-import Config (waveAsteroidSize)
-
 import Movement (distance)
 import DataTypes.Types
 import Assets
@@ -20,10 +18,7 @@ instance Collideable Player where
 
 instance Collideable Asteroid where
     getCollisionPosition a = asteroidPosition a
-    getCollisionRadius assetsRadii a = aScale * (asteroidRadius assetsRadii)
-        where
-            aScale = (fromIntegral (asteroidSize a)) / (fromIntegral waveAsteroidSize) 
-                -- scale also calculated and used in Drawing.hs - refactor?
+    getCollisionRadius assetsRadii a = asteroidScale a * asteroidRadius assetsRadii
 
 instance Collideable Enemy where
     getCollisionPosition e = enemyPosition e
@@ -122,7 +117,7 @@ handleEnemyBulletHitPlayer b gs = gs {
     playingField = field {
         bullets = filter (/= b) bs -- remove bullet
     }
-    , player = p {playerLives = pLives - 1} -- decrement playLives by 1, gameOver is checked in a alter step
+    , player = p {playerLives = pLives - 1} -- one life less; checkGameOver runs later in update
 }
     where
         field = playingField gs
@@ -148,7 +143,7 @@ handleEnemyHitPlayer e gs = gs {
     playingField = field {
         enemies = filter (/= e) es -- remove enemy
     }
-    , player = p {playerLives = pLives - 1} -- decrement playLives by 1, gameOver is checked in a alter step
+    , player = p {playerLives = pLives - 1}
 }
     where
         field = playingField gs
@@ -174,7 +169,7 @@ handleAsteroidHitPlayer a gs = gs {
     playingField = field {
         asteroids = filter (/= a) as -- remove asteroid
     }
-    , player = p {playerLives = pLives - 1} -- decrement playLives by 1, gameOver is checked in a alter step
+    , player = p {playerLives = pLives - 1}
 }
     where
         field = playingField gs
@@ -202,7 +197,7 @@ handleExplosionHitPlayer e gs = gs {
     playingField = field {
         explosions = filter (/= e) es -- remove explosion
     }
-    , player = p {playerLives = pLives - 1} -- decrement playLives by 1, gameOver is checked in a alter step
+    , player = p {playerLives = pLives - 1}
 }
     where
         field = playingField gs

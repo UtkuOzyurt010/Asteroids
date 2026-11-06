@@ -3,7 +3,8 @@ module Assets where
 import Graphics.Gloss (loadBMP, Picture(Bitmap, Scale), scale, )
 import Graphics.Gloss.Data.Bitmap (bitmapSize)
 
-import Config (asteroidImageScale)
+import Config (asteroidImageScale, waveAsteroidSize)
+import DataTypes.Types (Asteroid, asteroidSize)
 
 data Assets = Assets {
     playerImage :: Picture,
@@ -29,7 +30,11 @@ getRadiusfromPicture (Bitmap bmp) =
 getRadiusfromPicture (Scale sx sy pic) = max sx sy * getRadiusfromPicture pic
 getRadiusfromPicture _ = 0
 
-loadAssets :: IO Assets 
+-- an asteroid's image and radius relative to a full-size one, used for both drawing and collision
+asteroidScale :: Asteroid -> Float
+asteroidScale a = fromIntegral (asteroidSize a) / fromIntegral waveAsteroidSize
+
+loadAssets :: IO Assets
 loadAssets = do 
     playerBmp   <- loadBMP "src/Assets/playerimage.bmp"
     asteroidBmp <- loadBMP "src/Assets/asteroidimage.bmp"
