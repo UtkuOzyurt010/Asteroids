@@ -112,8 +112,8 @@ moveEntities dt gs = gs
 -- updates playerLives
 checkCollisions :: AssetsRadii -> GameState -> GameState 
 checkCollisions assetsRadii = 
-    -- checkCollisionsExplosions assetsRadii     
-    checkCollisionsAsteroids assetsRadii    
+    checkCollisionsExplosions assetsRadii     
+    . checkCollisionsAsteroids assetsRadii    
     . checkCollisionsEnemies assetsRadii      
     . checkCollisionsEnemyBullets assetsRadii  -- 2nd
     . checkCollisionsPlayerBullets assetsRadii -- 1st

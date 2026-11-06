@@ -9,7 +9,7 @@ import Movement (distance)
 import DataTypes.Types
 import Assets
 import Spawning (splitAsteroid)
-import Explosions (explosionFor)
+import Explosions (explosionFor, currentRadius)
 
 class Collideable a where
     getCollisionPosition :: a -> Position
@@ -33,6 +33,11 @@ instance Collideable Enemy where
 instance Collideable Bullet where
     getCollisionPosition b = bulletPosition b
     getCollisionRadius assetsRadii _ = bulletRadius assetsRadii
+
+instance Collideable Explosion where
+    getCollisionPosition e = explosionPosition e
+    getCollisionRadius assetsRadii e = currentRadius e -- currentRadius from Explosions.hs
+    
 
 collides :: (Collideable a, Collideable b) => AssetsRadii -> a -> b -> Bool
 collides assetsRadii a b = distance (getCollisionPosition a) (getCollisionPosition b)
@@ -111,7 +116,6 @@ checkCollisionsEnemyBullet assetsRadii gs bullet
     | collides assetsRadii bullet p = handleEnemyBulletHitPlayer bullet gs
     | otherwise = gs
     where
-        -- field = playingField gs
         p = player gs
 
 handleEnemyBulletHitPlayer :: Bullet -> GameState -> GameState -- only 1 player in gameState so no need to pass it as argument
@@ -138,7 +142,6 @@ checkCollisionsEnemy assetsRadii gs enemy
     | collides assetsRadii enemy p = handleEnemyHitPlayer enemy gs
     | otherwise = gs
     where
-        -- field = playingField gs
         p = player gs
 
 handleEnemyHitPlayer :: Enemy -> GameState -> GameState -- only 1 player in gameState so no need to pass it as argument
@@ -165,7 +168,6 @@ checkCollisionsAsteroid assetsRadii gs asteroid
     | collides assetsRadii asteroid p = handleAsteroidHitPlayer asteroid gs
     | otherwise = gs
     where
-        -- field = playingField gs
         p = player gs
 
 handleAsteroidHitPlayer :: Asteroid -> GameState -> GameState -- only 1 player in gameState so no need to pass it as argument
@@ -178,6 +180,34 @@ handleAsteroidHitPlayer a gs = gs {
     where
         field = playingField gs
         as = asteroids field
+        p = player gs
+        pLives = playerLives p
+
+
+
+checkCollisionsExplosions :: AssetsRadii -> GameState -> GameState
+checkCollisionsExplosions assetsRadii gs = foldl' (checkCollisionsExplosion assetsRadii) gs es --fold with gs as accumulator to remove enemies as soon as possible to prevent multiple collisions
+    where 
+        field = playingField gs 
+        es = explosions field
+
+checkCollisionsExplosion :: AssetsRadii -> GameState -> Explosion -> GameState
+checkCollisionsExplosion assetsRadii gs explosion
+    | collides assetsRadii explosion p = handleExplosionHitPlayer explosion gs
+    | otherwise = gs
+    where
+        p = player gs
+
+handleExplosionHitPlayer :: Explosion -> GameState -> GameState -- only 1 player in gameState so no need to pass it as argument
+handleExplosionHitPlayer e gs = gs {
+    playingField = field {
+        explosions = filter (/= e) es -- remove explosion
+    }
+    , player = p {playerLives = pLives - 1} -- decrement playLives by 1, gameOver is checked in a alter step
+}
+    where
+        field = playingField gs
+        es = explosions field
         p = player gs
         pLives = playerLives p
     
