@@ -98,7 +98,7 @@ moveEntities :: AssetsRadii -> Float -> GameState -> GameState
 moveEntities assetsRadii dt gs = gs
     { player = clampPlayer assetsRadii $ move dt $ accelerate dt (playerAcceleration p) (drag dt p)
     , playingField = releaseIncoming dt field
-        { asteroids = map (move dt) (asteroids field)
+        { asteroids = map (wrapAround . move dt) (asteroids field)
         , enemies   = map (move dt) steeredEnemies
         , bullets   = map (move dt) (enemyBullets ++ bullets field)
         , explosions = updateExplosions dt (explosions field)
