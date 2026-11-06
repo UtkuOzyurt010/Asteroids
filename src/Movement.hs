@@ -4,7 +4,7 @@ import DataTypes.Types
 import Data.Ord (clamp)
 
 -- import Colliding (getCollisionRadius)
-import Config (dragStrength, halfWidth, halfHeight)
+import Config (dragStrength, halfWidth, halfHeight, spawnMargin)
 import Assets (AssetsRadii)
 
 class Moveable a where
@@ -90,6 +90,21 @@ clampPlayer _ p = p {
 
         velx' = if x' /= x then 0 else velx
         vely' = if y' /= y then 0 else vely
+
+-- an object that leaves spawnMargin outside the screen comes back on the other side
+wrapAround :: Moveable a => a -> a
+wrapAround obj = setPosition (Position (wrapAxis w (px pos)) (wrapAxis h (py pos))) obj
+    where
+        pos = getPosition obj
+        w = halfWidth  + spawnMargin
+        h = halfHeight + spawnMargin
+
+-- keeps a coordinate between -edge and edge so new spawns exactly on the edge stay 
+wrapAxis :: Float -> Float -> Float
+wrapAxis edge c
+    | c > edge    = c - 2 * edge
+    | c < -edge   = c + 2 * edge
+    | otherwise   = c
 
 -- direction from one position to another in degrees, 0 = up and clockwise
 angleTowards :: Position -> Position -> Float
