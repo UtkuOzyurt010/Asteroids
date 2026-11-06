@@ -15,7 +15,7 @@ import Data.Ord (comparing)
 
 import Config
 import DataTypes.Types
-import Movement (distance)
+import Movement (distance, angleTowards)
 import Randomness
 
 -- random spot just outside the screen, at least minSpawnDistance from the player
@@ -108,5 +108,6 @@ spawnEnemy playerPos gen = (enemy, gen4)
         { enemyPosition  = pos
         , enemyVelocity  = vel
         , enemyBehaviour = behaviour
+        , enemyFacingDirection = angleTowards pos playerPos
         , enemySize      = enemySpawnSize
         }

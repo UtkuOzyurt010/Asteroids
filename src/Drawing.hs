@@ -6,6 +6,7 @@ import Config (waveAsteroidSize)
 import DataTypes.Types
 import Assets
 import Explosions (explosionProgress, currentRadius)
+import Movement (velocityAngle)
 
 -- move a picture (drawn around the origin) to a game position.
 atPosition :: Position -> Picture -> Picture
@@ -32,6 +33,7 @@ instance Drawable Asteroid where
 instance Drawable Enemy where
     draw as e =
         atPosition (enemyPosition e)
+        . rotate (enemyFacingDirection e)
         $ image (enemyBehaviour e)
         where image Chaser      = enemyImage as
               image (Shooter _) = shooterImage as
@@ -39,6 +41,7 @@ instance Drawable Enemy where
 instance Drawable Bullet where
     draw as b =
         atPosition (bulletPosition b)
+        . rotate (velocityAngle (bulletVelocity b)) -- points the way it flies
         $ bulletImage as
 
 -- explosions have no bitmap: an orange disc that grows and fades out

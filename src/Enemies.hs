@@ -14,7 +14,11 @@ import Movement
 updateEnemies :: Float -> Position -> [Enemy] -> ([Enemy], [Bullet])
 updateEnemies dt target es = (es', catMaybes shots)
   where
-    (es', shots) = unzip (map (updateEnemy dt target) es)
+    (es', shots) = unzip (map (updateEnemy dt target . faceTowards target) es)
+
+-- turns the enemy to face the target
+faceTowards :: Position -> Enemy -> Enemy
+faceTowards target e = e { enemyFacingDirection = angleTowards (enemyPosition e) target }
 
 updateEnemy :: Float -> Position -> Enemy -> (Enemy, Maybe Bullet)
 updateEnemy dt target e = case enemyBehaviour e of

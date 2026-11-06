@@ -79,6 +79,7 @@ data Enemy = Enemy {
     enemyPosition :: Position,
     enemyVelocity :: Velocity,
     enemyBehaviour :: EnemyBehaviour,
+    enemyFacingDirection :: Float, -- degrees (0 = up), always towards the player
     enemySize :: Int -- use for graphical representation
 } deriving (Show, Eq)
 

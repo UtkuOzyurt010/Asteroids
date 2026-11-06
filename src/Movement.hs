@@ -73,6 +73,14 @@ move dt obj = setPosition newPos obj
         -- respectively add (velocity * passed time) to x and y of position
         newPos = Position (px currPos + vx currVel * dt) (py currPos + vy currVel * dt) 
 
+-- direction from one position to another in degrees, 0 = up and clockwise
+angleTowards :: Position -> Position -> Float
+angleTowards from to = atan2 (px to - px from) (py to - py from) * 180 / pi
+
+-- direction an object is moving in, in degrees and similar as angleTowards
+velocityAngle :: Velocity -> Float
+velocityAngle v = atan2 (vx v) (vy v) * 180 / pi
+
 -- straight-line distance between two positions
 distance :: Position -> Position -> Float
 distance a b = sqrt (dx * dx + dy * dy)
