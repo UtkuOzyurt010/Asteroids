@@ -32,5 +32,4 @@ initialPlayer = Player
     , playerAcceleration    = Acceleration 0 0
     , playerFacingDirection = 0   -- degrees, 0 = pointing up
     , playerLives           = startingLives
-    , playerFireCooldown    = 0
     }

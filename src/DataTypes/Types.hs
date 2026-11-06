@@ -40,8 +40,7 @@ data Player = Player {
     playerVelocity :: Velocity,
     playerAcceleration :: Acceleration,
     playerFacingDirection :: Float, -- facing direction in degrees (0 = up), separate from velocity
-    playerLives :: Int,
-    playerFireCooldown :: Float     -- seconds until the player may shoot again
+    playerLives :: Int
 } deriving (Show, Eq)
 
 data PlayingField = PlayingField {
