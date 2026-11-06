@@ -11,6 +11,8 @@ cabal build
 cabal run asteroids
 ```
 
+on windows, put `freeglut.dll` in the project folder
+
 run it from the project folder, because the images are loaded from `src/Assets/`
 
 the high scores are saved to `highscores.txt` in the folder you start the game from
@@ -22,6 +24,7 @@ the high scores are saved to `highscores.txt` in the folder you start the game f
 | W A S D    | accelerate up, left, down, right   |
 | mouse      | aim (the ship faces the cursor)    |
 | space      | shoot                              |
+| left click | shoot                              |
 | p          | pause and continue                 |
 | esc        | close the game                     |
 
