@@ -1,4 +1,3 @@
--- creating random objects: new asteroids, pieces of split asteroids and enemies
 module Spawning
     ( randomSpawnPosition
     , randomInwardVelocity
@@ -30,19 +29,33 @@ randomSpawnPosition playerPos gen = (fromMaybe furthest (find farEnough candidat
     farEnough pos = distance playerPos pos >= minSpawnDistance
     furthest      = maximumBy (comparing (distance playerPos)) (first :| rest)
 
+-- the screen edge an object spawns behind
+data Edge = TopEdge | BottomEdge | LeftEdge | RightEdge
+    deriving (Show, Eq, Enum, Bounded)
+
+-- one of the four edges equally likely
+randomEdge :: Rand Edge
+randomEdge gen = (toEnum i, gen')
+  where
+    (i, gen') = randomInRange (fromEnum (minBound :: Edge), fromEnum (maxBound :: Edge)) gen
+
 -- random spot on a rectangle spawnMargin outside the screen edges
 randomEdgePosition :: Rand Position
-randomEdgePosition gen = (pos, gen2)
+randomEdgePosition gen = (edgePosition edge t, gen2)
   where
-    (side, gen1) = randomInRange (0, 3 :: Int) gen
-    (t, gen2)    = randomInRange (-1, 1) gen1 -- where along that side
+    (edge, gen1) = randomEdge gen
+    (t, gen2)    = randomInRange (-1, 1) gen1 -- where along that edge
+
+-- spot on an edge of the spawn rectangle
+edgePosition :: Edge -> Float -> Position
+edgePosition edge t = case edge of
+    TopEdge    -> Position (t * w) h
+    BottomEdge -> Position (t * w) (-h)
+    LeftEdge   -> Position (-w) (t * h)
+    RightEdge  -> Position w (t * h)
+  where
     w = halfWidth  + spawnMargin
     h = halfHeight + spawnMargin
-    pos = case side of
-        0 -> Position (t * w) h    -- top
-        1 -> Position (t * w) (-h) -- bottom
-        2 -> Position (-w) (t * h) -- left
-        _ -> Position w (t * h)    -- right
 
 -- velocity towards the centre of the screen, give or take inwardSpread degrees
 randomInwardVelocity :: (Float, Float) -> Position -> Rand Velocity
