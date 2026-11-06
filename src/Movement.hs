@@ -5,7 +5,7 @@ import Data.Ord (clamp)
 
 -- import Colliding (getCollisionRadius)
 import Config (dragStrength, halfWidth, halfHeight)
-import Assets (AssetsRadii)
+import Assets (AssetsRadii, playerRadius)
 
 class Moveable a where
     getPosition :: a -> Position
@@ -77,16 +77,16 @@ move dt obj = setPosition newPos obj
         newPos = Position (px currPos + vx currVel * dt) (py currPos + vy currVel * dt) 
 
 clampPlayer :: AssetsRadii -> Player -> Player
-clampPlayer _ p = p {
+clampPlayer assetsRadii p = p {
     playerPosition = Position x' y'
     , playerVelocity = Velocity velx' vely'
 }
     where 
         Position x y = playerPosition p
         Velocity velx vely = playerVelocity p
-        -- r = getCollisionRadius assetsRadii p
-        x' = clamp (-halfWidth, halfWidth) x
-        y' = clamp (-halfHeight, halfHeight) y
+        r =  playerRadius assetsRadii
+        x' = clamp (-halfWidth + r, halfWidth - r) x
+        y' = clamp (-halfHeight + r, halfHeight - r) y
 
         velx' = if x' /= x then 0 else velx
         vely' = if y' /= y then 0 else vely
