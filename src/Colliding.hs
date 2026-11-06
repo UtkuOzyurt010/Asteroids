@@ -9,6 +9,7 @@ import Movement (distance)
 import DataTypes.Types
 import Assets
 import Spawning (splitAsteroid)
+import Explosions (explosionFor)
 
 class Collideable a where
     getCollisionPosition :: a -> Position
@@ -76,7 +77,8 @@ handlePlayerBulletHitAsteroid :: Bullet -> Asteroid -> GameState -> GameState
 handlePlayerBulletHitAsteroid b a gs = gs {
     playingField = field {
         bullets = filter (/= b) bs -- remove bullet
-        , asteroids = filter (/= a) as ++ newAsteroids-- remove asteroid
+        , asteroids = filter (/= a) as ++ newAsteroids-- remove asteroid and add split asteroids if created
+        , explosions = es ++ newExplosions -- add new explosions if created
     }
     , score = s + 1              -- increment score
     , rng = gen'
@@ -85,10 +87,17 @@ handlePlayerBulletHitAsteroid b a gs = gs {
         field = playingField gs
         bs = bullets field
         as = asteroids field
+        es = explosions field
         s = score gs
         gen = rng gs
-        
-        (newAsteroids, gen') = splitAsteroid a gen
+
+        (newAsteroids, newExplosions, gen') = 
+            case explosionFor a of 
+                Just explosion -> ([], [explosion], gen)
+                Nothing -> 
+                    let (asteroidPieces, newGen) = splitAsteroid a gen
+                    in (asteroidPieces, [], newGen)
+                
 
 checkCollisionsEnemyBullets :: AssetsRadii -> GameState -> GameState
 checkCollisionsEnemyBullets assetsRadii gs = foldl' (checkCollisionsEnemyBullet assetsRadii) gs ebs --fold with gs as accumulator to remove bullets/enemies as soon as possible to prevent multiple collisions
