@@ -77,14 +77,19 @@ move dt obj = setPosition newPos obj
         newPos = Position (px currPos + vx currVel * dt) (py currPos + vy currVel * dt) 
 
 clampPlayer :: AssetsRadii -> Player -> Player
-clampPlayer assetsRadii p = p {
+clampPlayer _ p = p {
     playerPosition = Position x' y'
+    , playerVelocity = Velocity velx' vely'
 }
     where 
         Position x y = playerPosition p
+        Velocity velx vely = playerVelocity p
         -- r = getCollisionRadius assetsRadii p
         x' = clamp (-halfWidth, halfWidth) x
         y' = clamp (-halfHeight, halfHeight) y
+
+        velx' = if x' /= x then 0 else velx
+        vely' = if y' /= y then 0 else vely
 
 -- direction from one position to another in degrees, 0 = up and clockwise
 angleTowards :: Position -> Position -> Float
