@@ -113,5 +113,57 @@ handleEnemyBulletHitPlayer b gs = gs {
         p = player gs
         pLives = playerLives p
 
+checkCollisionsEnemies :: AssetsRadii -> GameState -> GameState
+checkCollisionsEnemies assetsRadii gs = foldl' (checkCollisionsEnemy assetsRadii) gs es --fold with gs as accumulator to remove enemies as soon as possible to prevent multiple collisions
+    where 
+        field = playingField gs 
+        es = enemies field
 
+checkCollisionsEnemy :: AssetsRadii -> GameState -> Enemy -> GameState
+checkCollisionsEnemy assetsRadii gs enemy
+    | collides assetsRadii enemy p = handleEnemyHitPlayer enemy gs
+    | otherwise = gs
+    where
+        -- field = playingField gs
+        p = player gs
+
+handleEnemyHitPlayer :: Enemy -> GameState -> GameState -- only 1 player in gameState so no need to pass it as argument
+handleEnemyHitPlayer e gs = gs {
+    playingField = field {
+        enemies = filter (/= e) es -- remove enemy
+    }
+    , player = p {playerLives = pLives - 1} -- decrement playLives by 1, gameOver is checked in a alter step
+}
+    where
+        field = playingField gs
+        es = enemies field
+        p = player gs
+        pLives = playerLives p
+
+checkCollisionsAsteroids :: AssetsRadii -> GameState -> GameState
+checkCollisionsAsteroids assetsRadii gs = foldl' (checkCollisionsAsteroid assetsRadii) gs as --fold with gs as accumulator to remove enemies as soon as possible to prevent multiple collisions
+    where 
+        field = playingField gs 
+        as = asteroids field
+
+checkCollisionsAsteroid :: AssetsRadii -> GameState -> Asteroid -> GameState
+checkCollisionsAsteroid assetsRadii gs asteroid
+    | collides assetsRadii asteroid p = handleAsteroidHitPlayer asteroid gs
+    | otherwise = gs
+    where
+        -- field = playingField gs
+        p = player gs
+
+handleAsteroidHitPlayer :: Asteroid -> GameState -> GameState -- only 1 player in gameState so no need to pass it as argument
+handleAsteroidHitPlayer a gs = gs {
+    playingField = field {
+        asteroids = filter (/= a) as -- remove asteroid
+    }
+    , player = p {playerLives = pLives - 1} -- decrement playLives by 1, gameOver is checked in a alter step
+}
+    where
+        field = playingField gs
+        as = asteroids field
+        p = player gs
+        pLives = playerLives p
     

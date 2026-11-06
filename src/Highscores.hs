@@ -1,6 +1,7 @@
 module Highscores where
 
 import Config (maxHighScores)
+import System.IO (readFile')
 
 import Data.Maybe (mapMaybe)
 import Text.Read (readMaybe)
@@ -24,7 +25,7 @@ loadHighScores :: FilePath -> IO [Int]
 loadHighScores path = do
     exists <- doesFileExist path
     if exists
-        then parseHighScores <$> readFile path
+        then parseHighScores <$> readFile' path
         else return [] -- first run: no file yet
 
 saveHighScores :: FilePath -> [Int] -> IO ()
