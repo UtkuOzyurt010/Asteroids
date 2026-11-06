@@ -12,7 +12,6 @@ atPosition :: Position -> Picture -> Picture
 atPosition pos = translate (px pos) (py pos)
 
 class Drawable a where
-    --atPosition :: Position -> Picture -> Picture
     draw :: Assets -> a -> Picture
 
 instance Drawable Player where
@@ -48,8 +47,4 @@ instance Drawable Explosion where
         atPosition (explosionPosition e)
         . color (withAlpha (1 - explosionProgress e) orange)
         $ circleSolid (currentRadius e)
-
--- draw :: Drawable a => Assets -> a ->  Picture
--- draw as obj = draw' as obj
-  
 

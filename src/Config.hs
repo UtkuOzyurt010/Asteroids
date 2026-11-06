@@ -20,6 +20,11 @@ maxHighScores :: Int
 maxHighScores = 10
 
 -- PLAYER
+
+-- number of lives the player starts with
+startingLives :: Int
+startingLives = 3
+
 dragStrength :: Float
 dragStrength = 60
 accStrength :: Float

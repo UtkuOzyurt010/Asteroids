@@ -2,9 +2,6 @@ module DataTypes.Types where
 
 import System.Random (StdGen)
 
--- split if this file becomes too large
--- DataTypes folder can be removed otherwise
-
 data Position = Position {
     px :: Float, -- access using e.g. "px pos" where "pos :: Position"
     py :: Float
@@ -42,7 +39,7 @@ data Player = Player {
     -- redundant state, since velocity is a function of both
     playerVelocity :: Velocity,
     playerAcceleration :: Acceleration,
-    playerFacingDirection :: Float, -- facing direction separate from velocity -- 'angle' might be a better name
+    playerFacingDirection :: Float, -- facing direction in degrees (0 = up), separate from velocity
     playerLives :: Int,
     playerFireCooldown :: Float     -- seconds until the player may shoot again
 } deriving (Show, Eq)

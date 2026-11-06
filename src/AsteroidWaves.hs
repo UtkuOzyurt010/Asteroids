@@ -18,7 +18,7 @@ import Randomness
 import Spawning (spawnAsteroid, spawnEnemy)
 
 -- how many of each AsteroidKind we want to include in the wave
-data AsteroidKindCount = AsteroidKindCount { -- I don't really like this name tbh
+data AsteroidKindCount = AsteroidKindCount {
     countedKind :: AsteroidKind,
     asteroidCount :: Int
 }

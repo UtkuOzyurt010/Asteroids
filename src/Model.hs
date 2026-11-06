@@ -3,11 +3,8 @@ module Model where
 
 import System.Random (StdGen)
 
+import Config (startingLives)
 import DataTypes.Types
-
--- Number of lives the player starts with.
-startingLives :: Int
-startingLives = 3
 
 -- The state the game starts in. The random generator is created in 'Main'
 -- (an IO action) and passed in, so this function stays pure.
@@ -34,7 +31,7 @@ initialPlayer = Player
     { playerPosition        = Position 0 0
     , playerVelocity        = Velocity 0 0
     , playerAcceleration    = Acceleration 0 0
-    , playerFacingDirection = 0   -- degrees, 0 = pointing up (see View.drawPlayer)
+    , playerFacingDirection = 0   -- degrees, 0 = pointing up
     , playerLives           = startingLives
     , playerFireCooldown    = 0
     }
