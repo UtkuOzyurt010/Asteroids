@@ -1,6 +1,8 @@
 -- gameplay constants so the game logic has no magic numbers
 module Config where
 
+import Graphics.Gloss (Color, white)
+
 -- window size in pixels
 screenWidth, screenHeight :: Int
 screenWidth  = 800
@@ -123,3 +125,19 @@ wavesPerEnemy :: Int
 wavesPerEnemy = 3
 
 -- VIEW
+
+-- scale of the HUD text (gloss text is about 100 px tall, so about 15 px)
+hudTextScale :: Float
+hudTextScale = 0.15
+
+-- distance from the screen edge to the HUD text
+hudMargin :: Float
+hudMargin = 20
+
+-- vertical distance between two lines of HUD text
+hudLineSpacing :: Float
+hudLineSpacing = 25
+
+-- colour of the HUD text
+hudColor :: Color
+hudColor = white

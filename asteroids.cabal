@@ -27,5 +27,6 @@ executable asteroids
                      , Explosions
                      , Assets
                      , Highscores
+                     , Hud
   default-language:    Haskell2010
   ghc-options:         -Wall
