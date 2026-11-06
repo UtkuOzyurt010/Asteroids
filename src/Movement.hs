@@ -108,11 +108,18 @@ wrapAxis edge c
 
 -- direction from one position to another in degrees, 0 = up and clockwise
 angleTowards :: Position -> Position -> Float
-angleTowards from to = atan2 (px to - px from) (py to - py from) * 180 / pi
+angleTowards from to = radiansToDegrees (atan2 (px to - px from) (py to - py from))
 
 -- direction an object is moving in, in degrees and similar as angleTowards
 velocityAngle :: Velocity -> Float
-velocityAngle v = atan2 (vx v) (vy v) * 180 / pi
+velocityAngle v = radiansToDegrees (atan2 (vx v) (vy v))
+
+-- gloss and our angles use degrees, cos/sin/atan2 use radians
+radiansToDegrees :: Float -> Float
+radiansToDegrees r = r * 180 / pi
+
+degreesToRadians :: Float -> Float
+degreesToRadians d = d * pi / 180
 
 -- straight-line distance between two positions
 distance :: Position -> Position -> Float

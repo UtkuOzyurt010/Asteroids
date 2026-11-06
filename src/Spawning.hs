@@ -15,7 +15,7 @@ import Data.Ord (comparing)
 
 import Config
 import DataTypes.Types
-import Movement (distance, angleTowards)
+import Movement (distance, angleTowards, degreesToRadians)
 import Randomness
 
 -- random spot just outside the screen, at least minSpawnDistance from the player
@@ -64,7 +64,7 @@ randomInwardVelocity speedRange pos gen = (velocityFromAngle angle speed, gen2)
     (spread, gen1) = randomInRange (-inwardSpread, inwardSpread) gen
     (speed, gen2)  = randomInRange speedRange gen1
     towardsCentre  = atan2 (negate (py pos)) (negate (px pos))
-    angle          = towardsCentre + spread * pi / 180
+    angle          = towardsCentre + degreesToRadians spread
 
 -- velocity from a direction (radians, counterclockwise from the right) and a speed
 velocityFromAngle :: Float -> Float -> Velocity
@@ -142,4 +142,4 @@ spawnPlayerbullet pos angle =
 angleToVector :: Float -> (Float, Float)
 angleToVector angle = (sin rad, cos rad)
   where 
-    rad = angle * pi / 180
+    rad = degreesToRadians angle

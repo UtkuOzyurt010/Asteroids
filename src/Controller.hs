@@ -19,10 +19,7 @@ import Spawning (spawnPlayerbullet)
 input :: Event -> GameState -> IO GameState
 input (EventMotion (x, y)) gs = do
     let p = player gs
-        pos = playerPosition p
-        dx = x - px pos
-        dy = y - py pos
-        angle = atan2 dx dy * 180 / pi -- -180 to 180 degrees
+        angle = angleTowards (playerPosition p) (Position x y) -- -180 to 180 degrees
     return gs { player = p { playerFacingDirection = angle } }
 
 input (EventKey (Char 'p') Down _ _) gs = do -- pause
